@@ -28,7 +28,7 @@ Given /^I am on the RottenPotatoes home page$/ do
    click_on "More about #{title}"
  end
 
- Then /^(?:|I )should see "([^"]*)"$/ do |text|
+ Then /^(?:|I )should see "([^""]*)"$/ do |text|
     expect(page).to have_content(text)
  end
 
@@ -44,10 +44,11 @@ Given /^I am on the RottenPotatoes home page$/ do
 
 
 # Add a declarative step here for populating the DB with movies.
-
 Given /the following movies have been added to RottenPotatoes:/ do |movies_table|
-  pending  # Remove this statement when you finish implementing the test step
+ # pending  # Remove this statement when you finish implementing the test step
   movies_table.hashes.each do |movie|
+    m = Movie.create!(movie)
+    m.save();
     # Each returned movie will be a hash representing one row of the movies_table
     # The keys will be the table headers and the values will be the row contents.
     # Entries can be directly to the database with ActiveRecord methods
@@ -55,20 +56,52 @@ Given /the following movies have been added to RottenPotatoes:/ do |movies_table
   end
 end
 
-When /^I have opted to see movies rated: "(.*?)"$/ do |arg1|
+Then /the movies should be sorted by "(.*)"/ do |field|
+  prev=""
+  Movie.find(:all, :order => field).each do |movie|
+    curr = movie.send(field)
+    step "I should see \"#{prev}\" before \"#{curr}\"" if prev != ""
+    prev = curr 
+  end
+end
+
+When /^I have opted to see movies rated: "(.*?)"$/ do |rating_list|
   # HINT: use String#split to split up the rating_list, then
   # iterate over the ratings and check/uncheck the ratings
   # using the appropriate Capybara command(s)
-  pending  #remove this statement after implementing the test step
+ # pending  #remove this statement after implementing the test step
+ ratings = rating_list.split(/\s*,\s*/)
+ Movie.where(rating: ratings).find_each do |movie|
+     step "I should see \"#{movie.title}\""
+    end
 end
 
-Then /^I should see only movies rated: "(.*?)"$/ do |arg1|
-  pending  #remove this statement after implementing the test step
+Then /^I should see only movies rated: "(.*?)"$/ do |rating_list|
+  #pending  #remove this statement afterratings = rating_list.split(/\s*,\s*/)
+ Movie.where(rating: ratings).find_each do |movie|
+     step "I should see \"#{movie.title}\""
+ end
 end
 
 Then /^I should see all of the movies$/ do
-  pending  #remove this statement after implementing the test step
+ # pending  #remove this statement after implementing the test step
+  rows = page.all("table#movies tbody tr td[1]").map! {|t| t.text}
+  assert rows.size==Movie.all.count
 end
 
+When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
+  ratings = rating_list.split(/,/)
+  ratings.each do |rating|
+    if (uncheck.nil?)
+      check("ratings_#{rating}")
+    elsif
+      uncheck("ratings_#{rating}")
+    end
+    end
+end
+
+When /^I press "(.*?)" on the homepage$/ do |button|
+  click_button(button)
+end
 
 
