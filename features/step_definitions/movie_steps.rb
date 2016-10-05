@@ -77,11 +77,11 @@ Then /^I should see only movies rated: "(.*?)"$/ do |rating_list|
 end
 #Should see all the movies
 Then /^I should see all of the movies/ do
-  rows = page.all('#movies tr').size - 1
+   rows = page.all('#movies tr').size - 1
    rows.should == Movie.count()
 end
 #  ensure that that e1 occurs before e2.
-Then /^I should see "(.*)" before "(.*)"/ do |e1, e2|
+And /^I should see "(.*)" before "(.*)"/ do |e1, e2|
   #  page.content  is the entire content of the page as a string.
   assert_match(/#{e1}(.|\n)*#{e2}/,page.body)
 end
@@ -93,19 +93,18 @@ end
 
 Then /the movies should be sorted by "(.*)"/ do |field|
   prev=""
-  Movie.find(:all, :order => field).each do |movie|
+  Movie.find(:all, :order => "field").each do |movie|
     curr = movie.send(field)
     step "I should see \"#{prev}\" before \"#{curr}\"" if prev != ""
     prev = curr 
   end
 end
 #Mimic unchecking/checking  a ratings box
-When /^I (un)?check the following ratings: "(.*)"/ do |uncheck, rating_list|
-  if uncheck == "un"
+When /^I uncheck the following ratings: "(.*)"/ do |rating_list|
     rating_list.split(', ').each {|x| step %{I uncheck "ratings_#{x}"}}
-  else
+end
+When /^I check the following ratings: "(.*)"/ do |rating_list|
     rating_list.split(', ').each {|x| step %{I check "ratings_#{x}"}}
-  end
 end
 #Mimic Button Press on page
 When /^I press "(.*?)"$/ do |button|

@@ -30,7 +30,7 @@ Scenario: sort movies alphabetically
   When I click on "title_header"
   Then I am on the RottenPotatoes home page
   Then the movies should be sorted by "title"
-  #Then I should see "2001: A Space Odyssey" before "Aladdin"
+  #And I should see "2001: A Space Odyssey" before "Aladdin"
   #And I should see "Aladdin" before "Amelie"
   #And I should see "Amelie" before "Chicken Run"
   #And I should see "Chicken Run" before "Chocolat"
@@ -49,7 +49,7 @@ Scenario: sort movies in increasing order of release date
   When I click on "release_date_header"
   Then I am on the RottenPotatoes home page
   Then the movies should be sorted by "release_date"
- # Then I should see "2001: A Space Odyssey" before "Raiders of the Lost Ark"
+  #And I should see "2001: A Space Odyssey" before "Raiders of the Lost Ark"
   #And I should see "Raiders of the Lost Ark" before "The Terminator"
   #And I should see "The Terminator" before "When Harry Met Sally"
   #And I should see "When Harry Met Sally" before "Aladdin"
