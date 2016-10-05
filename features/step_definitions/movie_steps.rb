@@ -28,8 +28,11 @@ Given /^I am on the RottenPotatoes home page$/ do
    click_on "More about #{title}"
  end
 
- Then /^(?:|I )should see "([^""]*)"$/ do |text|
+ Then /^(?:|I )should see "([^"]*)"$/ do |text|
     expect(page).to have_content(text)
+ end
+ Then /^(?:|I )should not see "([^"]*)"$/ do |text|
+    expect(page).to !have_content(text)
  end
 
  When /^I have edited the movie "(.*?)" to change the rating to "(.*?)"$/ do |movie, rating|
@@ -47,13 +50,45 @@ Given /^I am on the RottenPotatoes home page$/ do
 Given /the following movies have been added to RottenPotatoes:/ do |movies_table|
  # pending  # Remove this statement when you finish implementing the test step
   movies_table.hashes.each do |movie|
-    m = Movie.create!(movie)
-    m.save();
+   m =  Movie.create!(movie)
+   m.save()
     # Each returned movie will be a hash representing one row of the movies_table
     # The keys will be the table headers and the values will be the row contents.
     # Entries can be directly to the database with ActiveRecord methods
     # Add the necessary Active Record call(s) to populate the database.
   end
+end
+When /^I have opted to see movies rated: "(.*?)"$/ do |args|
+  # HINT: use String#split to split up the rating_list, then
+  # iterate over the ratings and check/uncheck the ratings
+  # using the appropriate Capybara command(s)
+ # pending  #remove this statement after implementing the test step
+ ratings = args.split(/\s*,\s*/)
+ Movie.where(rating: ratings).find_each do |movie|
+     step "I should see \"#{movie.title}\""
+    end
+end
+
+Then /^I should see only movies rated: "(.*?)"$/ do |rating_list|
+ ratings = rating_list.split(/\s*,\s*/)
+ Movie.where(rating: ratings).find_each do |movie|
+     step "I should see \"#{movie.title}\""
+ end
+end
+#Should see all the movies
+#Then /^I should see all of the movies/ do
+  #rows = page.all('#movies tr').size - 1
+ # assert rows == Movie.count()
+#end
+#  ensure that that e1 occurs before e2.
+Then /^I should see "(.*)" before "(.*)"/ do |e1, e2|
+  #  page.content  is the entire content of the page as a string.
+  assert_match(/#{e1}(.|\n)*#{e2}/,page.body)
+end
+#Shouldn't see any movies
+Then /I should not see any of the movies/ do
+  rows = page.all('#movies tr').size - 1
+  assert rows == 0
 end
 
 Then /the movies should be sorted by "(.*)"/ do |field|
@@ -64,44 +99,15 @@ Then /the movies should be sorted by "(.*)"/ do |field|
     prev = curr 
   end
 end
-
-When /^I have opted to see movies rated: "(.*?)"$/ do |rating_list|
-  # HINT: use String#split to split up the rating_list, then
-  # iterate over the ratings and check/uncheck the ratings
-  # using the appropriate Capybara command(s)
- # pending  #remove this statement after implementing the test step
- ratings = rating_list.split(/\s*,\s*/)
- Movie.where(rating: ratings).find_each do |movie|
-     step "I should see \"#{movie.title}\""
-    end
+#Mimic unchecking/checking  a ratings box
+When /^I (un)?check the following ratings: "(.*)"/ do |uncheck, rating_list|
+  if uncheck == "un"
+    rating_list.split(', ').each {|x| step %{I uncheck "ratings_#{x}"}}
+  else
+    rating_list.split(', ').each {|x| step %{I check "ratings_#{x}"}}
+  end
 end
-
-Then /^I should see only movies rated: "(.*?)"$/ do |rating_list|
-  #pending  #remove this statement afterratings = rating_list.split(/\s*,\s*/)
- Movie.where(rating: ratings).find_each do |movie|
-     step "I should see \"#{movie.title}\""
- end
-end
-
-Then /^I should see all of the movies$/ do
- # pending  #remove this statement after implementing the test step
-  rows = page.all("table#movies tbody tr td[1]").map! {|t| t.text}
-  assert rows.size==Movie.all.count
-end
-
-When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
-  ratings = rating_list.split(/,/)
-  ratings.each do |rating|
-    if (uncheck.nil?)
-      check("ratings_#{rating}")
-    elsif
-      uncheck("ratings_#{rating}")
-    end
-    end
-end
-
-When /^I press "(.*?)" on the homepage$/ do |button|
+#Mimic Button Press on page
+When /^I press "(.*?)"$/ do |button|
   click_button(button)
 end
-
-

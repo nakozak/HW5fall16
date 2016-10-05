@@ -23,12 +23,25 @@ Background: movies have been added to RottenPotatoes
   
 Scenario: restrict to movies with 'PG' or 'R' ratings
   When I have opted to see movies rated: "PG, R"
-  Then I should see: "The Terminator"
-  And I should see :"When Harry Met Sally"
-  And I should see: "Amelie"
-  And I should see: "The Incredibles"
-  And I should see: "Raiders of the Lost Ark"
+  #When I uncheck the following ratings: "PG-13, NC-17, G"
+  #And I press "ratings_submit"
+  #And I am on the RottenPotatoes home page
+  #And I should see "Amelie"
+  #And I should see "Raiders of the Lost Ark"
+  #And I should see "The Incredibles"
+  #And I should see "The Terminator"
+  #And I should see "When Harry Met Sally"
+  #And I should not see "The Help"
+  #And I should not see "Chocolat"
+  #And I should not see "Aladdin"
+  #And I should not see "2001: A Space Odyssey"
+  #And I should not see "Chicken Run"
+  Then I should see only movies rated: "PG, R"
   
 Scenario: all ratings selected
-  When I have opted to see movies rated: "G, PG, PG-13, R"
+  When I have opted to see movies rated: "G, PG, PG-13,NC-17 R"
+  #When I check the following ratings: "PG, R, PG-13, NC-17, G"
+  #And I press "ratings_submit"
+  #And I am on the RottenPotatoes home page
+  #And I should see all of the movies
   Then I should see all of the movies
