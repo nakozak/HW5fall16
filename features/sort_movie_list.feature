@@ -23,7 +23,7 @@ Background: movies have been added to database
 
 Scenario: sort movies alphabetically
   # your scenario here
-  When I check the following ratings: PG, R, PG-13, NC-17, G
+  When I check the following ratings: "PG, R, PG-13, NC-17, G"
   And I press "ratings_submit"
   Then I am on the RottenPotatoes home page
   Then I should see all of the movies
@@ -41,7 +41,7 @@ Scenario: sort movies alphabetically
   
 Scenario: sort movies in increasing order of release date
   # your scenario here
-  When I check the following ratings: PG, R, PG-13, NC-17, G
+  When I check the following ratings: "PG, R, PG-13, NC-17, G"
   And I press "ratings_submit"
   Then I am on the RottenPotatoes home page
   Then I should see all of the movies

@@ -28,10 +28,10 @@ Given /^I am on the RottenPotatoes home page$/ do
    click_on "More about #{title}"
  end
 
- Then /^(?:|I )should see "([^"]*)"$/ do |text|
+ Then /^(?:|I )should see "([^\"]*)"$/ do |text|
     expect(page).to have_content(text)
  end
- Then /^(?:|I )should not see "([^"]*)"$/ do |text|
+ Then /^(?:|I )should not see "([^\"]*)"$/ do |text|
     expect(page).to !have_content(text)
  end
 
@@ -76,10 +76,10 @@ Then /^I should see only movies rated: "(.*?)"$/ do |rating_list|
  end
 end
 #Should see all the movies
-#Then /^I should see all of the movies/ do
-  #rows = page.all('#movies tr').size - 1
- # assert rows == Movie.count()
-#end
+Then /^I should see all of the movies/ do
+  rows = page.all('#movies tr').size - 1
+   rows.should == Movie.count()
+end
 #  ensure that that e1 occurs before e2.
 Then /^I should see "(.*)" before "(.*)"/ do |e1, e2|
   #  page.content  is the entire content of the page as a string.
