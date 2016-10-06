@@ -1,4 +1,4 @@
-# Completed step definitions for basic features: AddMovie, ViewDetails, EditMovie 
+# Completed step definitions for basic features: AddMovie, ViewDetails, EditMovie, Filter_Movie_List, and Sort_Movie_List
 
 Given /^I am on the RottenPotatoes home page$/ do
   visit movies_path
@@ -27,7 +27,7 @@ Given /^I am on the RottenPotatoes home page$/ do
    visit movies_path
    click_on "More about #{title}"
  end
-
+ #I should/ should not see _
  Then /^(?:|I )should see "([^\"]*)"$/ do |text|
     expect(page).to have_content(text)
  end
@@ -49,7 +49,7 @@ Given /^I am on the RottenPotatoes home page$/ do
 # Add a declarative step here for populating the DB with movies.
 Given /the following movies have been added to RottenPotatoes:/ do |movies_table|
  # pending  # Remove this statement when you finish implementing the test step
-  movies_table.hashes.each do |movie|
+   movies_table.hashes.each do |movie|
    Movie.create!(movie)
     # Each returned movie will be a hash representing one row of the movies_table
     # The keys will be the table headers and the values will be the row contents.
@@ -58,16 +58,14 @@ Given /the following movies have been added to RottenPotatoes:/ do |movies_table
   end
 end
 When /^I have opted to see movies rated: "(.*?)"$/ do |args|
-  # HINT: use String#split to split up the rating_list, then
-  # iterate over the ratings and check/uncheck the ratings
-  # using the appropriate Capybara command(s)
- # pending  #remove this statement after implementing the test step
+  # Use String#split to split up the rating_list, then
+  # iterate over the ratings
  ratings = args.split(/\s*,\s*/)
  Movie.where(rating: ratings).find_each do |movie|
      step "I should see \"#{movie.title}\""
     end
 end
-
+#Should only see movies rated a certian rating
 Then /^I should see only movies rated: "(.*?)"$/ do |rating_list|
  ratings = rating_list.split(/\s*,\s*/)
  Movie.where(rating: ratings).find_each do |movie|
@@ -79,10 +77,8 @@ Then /^I should see all of the movies/ do
    rows = page.all('#movies tr').size - 1
    rows.should == Movie.count()
 end
-#  ensure that that e1 occurs before e2.
+# Ensure that that e1 occurs before e2.
 And /^I should see "(.*?)" before "(.*?)"/ do |e1, e2|
-  #  page.content  is the entire content of the page as a string.
-  #assert page.body =~ /#{e1}.+#{e2}/m
   body = page.body.to_s
   e1_index = body.index(e1)
   e2_index = body.index(e2)
@@ -91,9 +87,11 @@ end
 #Shouldn't see any movies
 Then /I should not see any of the movies/ do
   rows = page.all('#movies tr').size - 1
-  assert rows == 0
+  rows.should == 0
 end
 #Mimic unchecking/checking  a ratings box
+#Splits ratings by checking for commas
+#Then completing the step of uncheck/checking the appropriate rating
 When /^I uncheck the following ratings: "(.*)"/ do |rating_list|
     rating_list.split(', ').each {|x| step %{I uncheck "ratings_#{x}"}}
 end
@@ -104,13 +102,15 @@ end
 When /^I press "(.*?)"$/ do |button|
   click_button(button)
 end
+#Mimic checking a field
 When /^(?:|I )check "([^\"]*)"$/ do |field|
   check(field)
 end
+#Mimic unchecking a field
 When /^(?:|I )uncheck "([^\"]*)"$/ do |field|
   uncheck(field)
 end
-
+#Mimic clicking on a link
 When /^(?:|I )click on "([^\"]*)"$/ do |link|
   click_link(link)
 end
