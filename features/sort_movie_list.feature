@@ -26,7 +26,6 @@ Scenario: sort movies alphabetically
   When I check the following ratings: "PG, R, PG-13, NC-17, G"
   And I press "ratings_submit"
   Then I am on the RottenPotatoes home page
-  Then I should see all of the movies
   When I click on "title_header"
   Then I am on the RottenPotatoes home page
   And I should see "2001: A Space Odyssey" before "Aladdin"
@@ -44,7 +43,6 @@ Scenario: sort movies in increasing order of release date
   When I check the following ratings: "PG, R, PG-13, NC-17, G"
   And I press "ratings_submit"
   Then I am on the RottenPotatoes home page
-  Then I should see all of the movies
   When I click on "release_date_header"
   Then I am on the RottenPotatoes home page
   And I should see "2001: A Space Odyssey" before "Raiders of the Lost Ark"
@@ -56,5 +54,7 @@ Scenario: sort movies in increasing order of release date
   And I should see "Chocolat" before "Amelie"
   And I should see "Amelie" before "The Incredibles"
   And I should see "The Incredibles" before "The Help"
+  
+  
   
     
